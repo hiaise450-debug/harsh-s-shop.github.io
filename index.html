@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsh's Shop - Your One-Stop Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Simple fade transition for the slider */
+        .slider-item {
+            display: none;
+            transition: opacity 1s ease-in-out;
+        }
+        .slider-item.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* Custom modal styles for cart and messages */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 24px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close:hover,
+        .modal-close:focus {
+            color: black;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- 
+      HEADER & STICKY NAVBAR 
+    -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-bold text-indigo-600 flex items-center">
+                <i class="fa-solid fa-store mr-2"></i>
+                Harsh's Shop
+            </a>
+            
+            <!-- Search Bar (Mock) -->
+            <form id="search-form" class="hidden md:flex w-full max-w-lg mx-4">
+                <input id="search-input" type="text" placeholder="Search for products..." class="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-700">
+                    <i class="fa-solid fa-search"></i>
+                </button>
+            </form>
+            
+            <!-- Cart & Actions -->
+            <div class="flex items-center space-x-4">
+                <button id="search-icon-mobile" class="md:hidden text-gray-600 hover:text-indigo-600">
+                    <i class="fa-solid fa-search text-xl"></i>
+                </button>
+                <button id="cart-button" class="flex items-center text-gray-600 hover:text-indigo-600">
+                    <i class="fa-solid fa-shopping-cart text-xl"></i>
+                    <span id="cart-count" class="ml-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <button class="hidden sm:inline bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Login</button>
+            </div>
+        </nav>
+        <!-- Mobile search bar (hidden by default) -->
+        <form id="mobile-search-form" class="md:hidden p-4 border-t border-gray-200 hidden">
+            <div class="flex">
+                <input type="text" placeholder="Search for products..." class="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-700">
+                    <i class="fa-solid fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 
+          HERO SECTION (Image Slider) 
+        -->
+        <section id="hero" class="relative w-full h-64 md:h-96 rounded-lg overflow-hidden shadow-lg bg-gray-300 mb-12">
+            <!-- Slider Items -->
+            <div class="slider-item active h-full">
+                <img src="/images/ecommerce-website-design-examples-1024x768 (1) (1) (1).png" alt="Slide 1" class="w-full h-full object-cover">
+            </div>
+            <div class="slider-item h-full">
+                <img src="/images/360_F_1095061580_AM8Jkaf9rwoJK4hdiUg3QwHaKjpTmxtP (1).png" alt="Slide 2" class="w-full h-full object-cover">
+            </div>
+            <div class="slider-item h-full">
+                <img src="/images/pexels-shattha-pilabut-38930-135620 (1).png" alt="slide 3" class="w-full h-full object-cover">
+            
+            <!-- Slider Controls -->
+            <button id="prev-slide" class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/50 p-2 rounded-full text-gray-800 hover:bg-white">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button id="next-slide" class="absolute top-1/2 right-4 -translate-y-1/2 bg-white/50 p-2 rounded-full text-gray-800 hover:bg-white">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </section>
+
+        <!-- 
+          PRODUCT SECTION (Two Rows)
+        -->
+        <section id="products" class="mb-12">
+            <!-- Row 1: Featured Products -->
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Featured Products</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product Card 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/38156NM01_3.png" alt="Product 1" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Smart Watch</h3>
+                        <p class="text-gray-600 text-sm">Latest Gen Smart Watch</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹4,999</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/01_35549e0b-46fc-459f-98f6-b30d87724ced (1).png" alt="Product 2" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Wireless Earbuds</h3>
+                        <p class="text-gray-600 text-sm">Noise Cancelling, 24h Battery</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹2,299</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/coffee-maker-machine-ai-generated-photo.png" alt="Product 3" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Coffee Maker</h3>
+                        <p class="text-gray-600 text-sm">Automatic Drip Coffee Machine</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹3,199</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 4 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/gettyimages-135170160-612x612.png" alt="Product 4" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Running Shoes</h3>
+                        <p class="text-gray-600 text-sm">Lightweight & Breathable</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹1,899</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Row 2: New Arrivals -->
+            <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-6">New Arrivals</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product Card 5 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/43SQ700S-W-DZ-02.png" alt="Product 5" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">4K Monitor</h3>
+                        <p class="text-gray-600 text-sm">27-inch IPS Panel</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹22,999</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 6 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/g915-x-mechanical-gaming-keyboard-carbon-gallery-1-us.png" alt="Product 6" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Mechanical Keyboard</h3>
+                        <p class="text-gray-600 text-sm">RGB Backlit, Blue Switches</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹5,499</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 7 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/NEWHEY-Laptop-Bag-17-3-Inch-Laptop-Briefcase-Women-Men-Waterproof-Shoulder-Messenger-Bag-Large-Computer-Bag-Business-Office-Work-College-Dark-Blue_52657c98-6398-4266-b5ad-baba1ff37099.04 (1).png" alt="Product 7" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Backpack</h3>
+                        <p class="text-gray-600 text-sm">Water-resistant Laptop Bag</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹1,499</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 8 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+                    <img src="/images/7_copy.png" alt="Product 8" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Yoga Mat</h3>
+                        <p class="text-gray-600 text-sm">Eco-friendly TPE Material</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-indigo-600">₹999</span>
+                            <button class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+          DISCOUNT OFFERS
+        -->
+        <section id="discounts" class="bg-indigo-600 text-white p-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center justify-between mb-12">
+            <div>
+                <h2 class="text-3xl font-bold mb-2">Get 20% Off Your First Order!</h2>
+                <p class="text-lg">Use code <strong class="bg-white text-indigo-600 px-2 py-1 rounded">HARSH20</strong> at checkout.</p>
+            </div>
+            <a href="#products" class="mt-4 md:mt-0 bg-white text-indigo-600 px-6 py-3 rounded-lg text-lg font-bold hover:bg-gray-100">Shop Now</a>
+        </section>
+
+        <!-- 
+          WHY CHOOSE US
+        -->
+        <section id="why-choose-us" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Why Choose Us?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6 bg-white rounded-lg shadow-md">
+                    <i class="fa-solid fa-truck-fast text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Fast Shipping</h3>
+                    <p class="text-gray-600">Get your orders delivered to your doorstep in no time.</p>
+                </div>
+                <div class="text-center p-6 bg-white rounded-lg shadow-md">
+                    <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Secure Payments</h3>
+                    <p class="text-gray-600">We use industry-standard encryption for all transactions.</p>
+                </div>
+                <div class="text-center p-6 bg-white rounded-lg shadow-md">
+                    <i class="fa-solid fa-headset text-4xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">24/7 Support</h3>
+                    <p class="text-gray-600">Our support team is here to help you around the clock.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+          REVIEWS SECTION
+        -->
+        <section id="reviews" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">What Our Customers Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/50x50/e0e0e0/333?text=A" alt="Reviewer 1" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Anjali S.</h4>
+                            <div class="text-yellow-400">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"Incredible quality and super fast delivery. Harsh's Shop is my new go-to for electronics!"</p>
+                </div>
+                <!-- Review 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/50x50/e0e0e0/333?text=R" alt="Reviewer 2" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Rohan K.</h4>
+                            <div class="text-yellow-400">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"Great prices and a good selection of products. The website is very easy to use."</p>
+                </div>
+                <!-- Review 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/50x50/e0e0e0/333?text=P" alt="Reviewer 3" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Priya M.</h4>
+                            <div class="text-yellow-400">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">"Had an issue with my order and customer support was fantastic. Resolved it quickly!"</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 
+          OUR STORY & CONTACT (Combined)
+        -->
+        <section id="about-contact" class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12 items-center">
+            <!-- Our Story -->
+            <div id="our-story" class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Story</h2>
+                <img src="https://placehold.co/600x400/e0e0e0/333?text=Our+Storefront" alt="Our Story Image" class="w-full h-64 object-cover rounded-lg mb-4">
+                <p class="text-gray-600 leading-relaxed">
+                    Welcome to Harsh's Shop! Founded in 2024, our mission is to bring you the best products from around the world at unbeatable prices. We started as a small local business in Agra and have grown into a trusted online destination for thousands of customers. We believe in quality, value, and exceptional customer service.
+                </p>
+            </div>
+            
+            <!-- Contact Us -->
+            <div id="contact-us" class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Contact Us</h2>
+                <form id="contact-form">
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg text-lg font-bold hover:bg-indigo-700">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 
+          FAQ SECTION
+        -->
+        <section id="faq" class="mb-12 max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <details class="bg-white p-4 rounded-lg shadow-md group" open>
+                    <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+                        What are your shipping times?
+                        <span class="text-indigo-600 group-open:rotate-180 transition-transform">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <p class="text-gray-600 mt-2">
+                        Standard shipping usually takes 3-5 business days. Express shipping is available for 1-2 business days.
+                    </p>
+                </details>
+                <!-- FAQ 2 -->
+                <details class="bg-white p-4 rounded-lg shadow-md group">
+                    <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+                        What is your return policy?
+                        <span class="text-indigo-600 group-open:rotate-180 transition-transform">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <p class="text-gray-600 mt-2">
+                        We offer a 30-day hassle-free return policy. If you're not satisfied with your purchase, you can return it for a full refund.
+                    </p>
+                </details>
+                <!-- FAQ 3 -->
+                <details class="bg-white p-4 rounded-lg shadow-md group">
+                    <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+                        What payment methods do you accept?
+                        <span class="text-indigo-600 group-open:rotate-180 transition-transform">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <p class="text-gray-600 mt-2">
+                        We accept all major credit cards, PayPal, Google Pay, and UPI.
+                    </p>
+                </details>
+            </div>
+        </section>
+        
+        <!-- 
+          MAP OF AGRA
+        -->
+        <section id="map" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Find Us in Agra</h2>
+            <div class="w-full h-96 rounded-lg overflow-hidden shadow-lg">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113592.83638426039!2d77.90998188686445!3d27.1764653392471!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39740a44983b5f7b%3A0x6711319c9d57501!2sAgra%2C%20Uttar%20Pradesh%2C%20India!5e0!3m2!1sen!2sus!4v1729875505086!5m2!1sen!2sus" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- 
+      FOOTER SECTION
+    -->
+    <footer class="bg-gray-800 text-gray-300 pt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- About -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Harsh's Shop</h4>
+                <p class="text-sm">Your one-stop destination for the best products at the best prices. Based in Agra, Uttar Pradesh.</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" class="hover:text-white"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#products" class="hover:text-white">Products</a></li>
+                    <li><a href="#discounts" class="hover:text-white">Offers</a></li>
+                    <li><a href="#reviews" class="hover:text-white">Reviews</a></li>
+                    <li><a href="#our-story" class="hover:text-white">Our Story</a></li>
+                </ul>
+            </div>
+            
+            <!-- Help -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Help</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#contact-us" class="hover:text-white">Contact Us</a></li>
+                    <li><a href="#faq" class="hover:text-white">FAQ</a></li>
+                    <li><a href="#" class="hover:text-white">Track Order</a></li>
+                    <li><a href="#" class="hover:text-white">Return Policy</a></li>
+                </ul>
+            </div>
+            
+            <!-- Payment Methods -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Payment Methods</h4>
+                <div class="flex flex-wrap gap-2">
+                    <div class="bg-white p-1 rounded-md"><img src="https://placehold.co/50x30/fff/333?text=PayPal" alt="PayPal" class="h-6"></div>
+                    <div class="bg-white p-1 rounded-md"><img src="https://placehold.co/50x30/fff/333?text=GPay" alt="Google Pay" class="h-6"></div>
+                    <div class="bg-white p-1 rounded-md"><img src="https://placehold.co/50x30/fff/333?text=UPI" alt="UPI" class="h-6"></div>
+                    <div class="bg-white p-1 rounded-md"><img src="https://placehold.co/50x30/fff/333?text=Visa" alt="Visa" class="h-6"></div>
+                    <div class="bg-white p-1 rounded-md"><img src="https://placehold.co/50x30/fff/333?text=Mastercard" alt="Mastercard" class="h-6"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="border-t border-gray-700 mt-8 py-6">
+            <p class="text-center text-sm text-gray-400">
+                &copy; 2025 Harsh's Shop. All rights reserved.
+            </p>
+        </div>
+    </footer>
+    
+    <!-- 
+      MODALS (for Cart & Messages) 
+    -->
+    
+    <!-- General Message Modal -->
+    <div id="message-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" data-modal-id="message-modal">&times;</span>
+            <h3 id="message-title" class="text-xl font-semibold mb-4">Notice</h3>
+            <p id="message-text">This is a demo message.</p>
+        </div>
+    </div>
+    
+    <!-- Cart Modal (Mock) -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Your Cart</h3>
+                <span class="modal-close" data-modal-id="cart-modal">&times;</span>
+            </div>
+            
+            <!-- Cart Items (Mock) -->
+            <div id="cart-items" class="mb-6">
+                <p class="text-gray-600">Your cart is empty.</p>
+                <!-- Mock items would be added here by JS -->
+            </div>
+            
+            <div class="border-t pt-4">
+                <div class="flex justify-between font-bold text-lg mb-4">
+                    <span>Total:</span>
+                    <span id="cart-total">₹0.00</span>
+                </div>
+                
+                <h4 class="text-lg font-semibold mb-2">Proceed to Checkout</h4>
+                <p class="text-sm text-gray-600 mb-4">Select a payment method (demo only):</p>
+                
+                <!-- Payment Options (Mock) -->
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <img src="https://placehold.co/100x60/fff/333?text=PayPal" alt="PayPal" class="h-12 border rounded-md p-2 cursor-pointer hover:shadow-md">
+                    <img src="https://placehold.co/100x60/fff/333?text=Google+Pay" alt="Google Pay" class="h-12 border rounded-md p-2 cursor-pointer hover:shadow-md">
+                    <img src="https://placehold.co/100x60/fff/333?text=UPI" alt="UPI" class="h-12 border rounded-md p-2 cursor-pointer hover:shadow-md">
+                </div>
+                
+                <button id="checkout-btn" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-bold hover:bg-green-700 mt-6">Pay Now (Demo)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- General Modal Logic ---
+            const modals = document.querySelectorAll('.modal');
+            const modalCloseBtns = document.querySelectorAll('.modal-close');
+            
+            function showModal(modalId, title, message) {
+                const modal = document.getElementById(modalId);
+                if (modalId === 'message-modal') {
+                    document.getElementById('message-title').textContent = title || 'Notice';
+                    document.getElementById('message-text').textContent = message || 'This feature is a demo.';
+                }
+                modal.classList.add('show');
+            }
+            
+            function hideModal(modalId) {
+                document.getElementById(modalId).classList.remove('show');
+            }
+            
+            modalCloseBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    hideModal(btn.dataset.modalId);
+                });
+            });
+            
+            window.addEventListener('click', (e) => {
+                modals.forEach(modal => {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                    }
+                });
+            });
+
+            // --- Hero Slider Logic ---
+            const slides = document.querySelectorAll('.slider-item');
+            const prevBtn = document.getElementById('prev-slide');
+            const nextBtn = document.getElementById('next-slide');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                    if (i === index) {
+                        slide.classList.add('active');
+                    }
+                });
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            
+            // Auto-rotate slides
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            showSlide(currentSlide); // Show initial slide
+
+
+            // --- Mock Search Logic ---
+            const searchForm = document.getElementById('search-form');
+            const mobileSearchForm = document.getElementById('mobile-search-form');
+            const searchIconMobile = document.getElementById('search-icon-mobile');
+            
+            searchIconMobile.addEventListener('click', () => {
+                mobileSearchForm.classList.toggle('hidden');
+            });
+
+            function handleSearch(e) {
+                e.preventDefault();
+                const searchInput = e.target.querySelector('input[type="text"]');
+                const query = searchInput.value;
+                if (query) {
+                    showModal('message-modal', 'Search Demo', `Search functionality for "${query}" is not implemented in this demo.`);
+                } else {
+                    showModal('message-modal', 'Search Demo', 'Please enter a search term.');
+                }
+            }
+            searchForm.addEventListener('submit', handleSearch);
+            mobileSearchForm.addEventListener('submit', handleSearch);
+            
+
+            // --- Mock Cart Logic ---
+            const cartButton = document.getElementById('cart-button');
+            const cartCountEl = document.getElementById('cart-count');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            const cartItemsEl = document.getElementById('cart-items');
+            const cartTotalEl = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            let cartCount = 0;
+            let cartTotal = 0;
+            const cart = {};
+
+            cartButton.addEventListener('click', () => {
+                showModal('cart-modal');
+            });
+            
+            addToCartButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    cartCount++;
+                    cartCountEl.textContent = cartCount;
+                    
+                    // Get product info (mock)
+                    const card = e.target.closest('.p-4');
+                    const title = card.querySelector('h3').textContent;
+                    const priceString = card.querySelector('span').textContent.replace('₹', '').replace(',', '');
+                    const price = parseFloat(priceString);
+                    
+                    cartTotal += price;
+                    
+                    if (cart[title]) {
+                        cart[title].qty++;
+                    } else {
+                        cart[title] = { price: price, qty: 1 };
+                    }
+                    
+                    updateCartModal();
+                    showModal('message-modal', 'Item Added', `${title} has been added to your cart!`);
+                });
+            });
+            
+            function updateCartModal() {
+                if (cartCount === 0) {
+                    cartItemsEl.innerHTML = '<p class="text-gray-600">Your cart is empty.</p>';
+                    cartTotalEl.textContent = '₹0.00';
+                    return;
+                }
+                
+                cartItemsEl.innerHTML = ''; // Clear cart
+                Object.keys(cart).forEach(itemTitle => {
+                    const item = cart[itemTitle];
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'flex justify-between items-center py-2 border-b';
+                    itemEl.innerHTML = `
+                        <div>
+                            <p class="font-semibold">${itemTitle}</p>
+                            <p class="text-sm text-gray-500">Qty: ${item.qty}</p>
+                        </div>
+                        <span class="font-medium">₹${(item.price * item.qty).toLocaleString('en-IN')}</span>
+                    `;
+                    cartItemsEl.appendChild(itemEl);
+                });
+                
+                cartTotalEl.textContent = `₹${cartTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+            
+            checkoutBtn.addEventListener('click', () => {
+                if (cartCount > 0) {
+                    showModal('message-modal', 'Checkout Demo', 'Payment processing is not implemented in this demo. Thank you for shopping!');
+                    // Reset cart
+                    cartCount = 0;
+                    cartTotal = 0;
+                    Object.keys(cart).forEach(key => delete cart[key]);
+                    cartCountEl.textContent = '0';
+                    updateCartModal();
+                    hideModal('cart-modal');
+                } else {
+                    showModal('message-modal', 'Empty Cart', 'Your cart is empty. Please add items before checking out.');
+                }
+            });
+            
+            // --- Mock Contact Form ---
+            const contactForm = document.getElementById('contact-form');
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                showModal('message-modal', 'Message Sent!', 'Thank you for contacting us. We will get back to you soon (this is a demo).');
+                contactForm.reset();
+            });
+
+        });
+    </script>
+</body>
+</html>
